@@ -51,9 +51,10 @@ define(
       }
 
       // Add initial undo level when the editor is initialized
-      editor.on('init', function () {
+      // CHANGED:
+      /*editor.on('init', function () {
         self.add();
-      });
+      });*/
 
       // Get position before an execCommand is processed
       editor.on('BeforeExecCommand', function (e) {
@@ -206,7 +207,13 @@ define(
           }
 
           // Add undo level if needed
-          if (lastLevel && Levels.isEq(lastLevel, level)) {
+          /**
+           * CHANGED:
+           * Adiciona os níveis apenas se o conteúdo (removendo cabeçalho e rodapé) são os mesmos
+           * 24/08/2017
+           * Raphael Brandão
+           */
+          if (lastLevel && Levels.isEqWithoutHeadersAndFooters(lastLevel, level)) {
             return null;
           }
 

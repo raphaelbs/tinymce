@@ -75,12 +75,79 @@ define(
       return getLevelContent(level1) === getLevelContent(level2);
     };
 
+    /**
+     * CHANGED:
+     * Inserido método para comparar os níveis de undo sem olhar
+     * dentro de classes com cabeçalho e rodapé.
+     * 24/08/2017
+     * Raphael Brandão
+     */
+    var isEqWithoutHeadersAndFooters = function (level1, level2) {
+      return removeHeaderAndFooter(getLevelContent(level1)) === removeHeaderAndFooter(getLevelContent(level2));
+    };
+
+    /**
+     * CHANGED:
+     * Sanitizer para os leveis.
+     * Remove o cabeçalho e rodapé para fazer a comparação.
+     * 24/08/2017
+     * Raphael Brandão
+     */
+    function removeHeaderAndFooter(html) {
+      html = html.replace(/<!--(.*?)-->/g, '');
+      html = findHtmlEndingTag(html, '<div class="pageHeader');
+      html = findHtmlEndingTag(html, '<div class="pageFooter');
+      return html;
+    }
+
+    /**
+     * CHANGED:
+     * Remove a TAG {filter} do HTML {html}
+     * 24/08/2017
+     * Raphael Brandão
+     */
+    function findHtmlEndingTag(html, filter) {
+      if (html.indexOf(filter) < 0) {
+        return html;
+      }
+      var result = html.substr(0, html.indexOf(filter));
+      html = html.substr(html.indexOf(filter) + filter.length);
+      var expEnding = 1;
+      while (expEnding > 0) {
+        html = html.substr(html.indexOf('<') + 1);
+        if (html.charAt(0) === '/') {
+          expEnding--;
+          continue;
+        }
+        if (isHtmlTag('img')) {
+          continue;
+        }
+        if (isHtmlTag('input')) {
+          continue;
+        }
+        if (isHtmlTag('br')) {
+          continue;
+        }
+        if (isHtmlTag('hr')) {
+          continue;
+        }
+        expEnding++;
+      }
+      return findHtmlEndingTag(result + html.substr(html.indexOf('>') + 1), filter);
+
+      function isHtmlTag(tag) {
+        return html.substr(0, tag.length + 1) === tag + ' ';
+      }
+    }
+
     return {
       createFragmentedLevel: createFragmentedLevel,
       createCompleteLevel: createCompleteLevel,
       createFromEditor: createFromEditor,
       applyToEditor: applyToEditor,
-      isEq: isEq
+      isEq: isEq,
+      // CHANGED:
+      isEqWithoutHeadersAndFooters: isEqWithoutHeadersAndFooters
     };
   }
 );
