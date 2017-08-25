@@ -634,6 +634,12 @@ module.exports = function (grunt) {
             }
           }
         ]
+      },
+
+      "to_project": {
+        files: [
+          {src: ['js/tinymce/tinymce.js', 'js/tinymce/tinymce.min.js'], dest: 'C:/inetpub/wwwroot/appsLifesys/LifesysClinica/2-Execução/appManutencao/lib/js/tinymce/', flatten: true, expand: true}
+        ]
       }
     }
   });
@@ -652,6 +658,9 @@ module.exports = function (grunt) {
   grunt.loadTasks("tools/tasks");
   grunt.loadNpmTasks('@ephox/bolt');
   grunt.loadNpmTasks('@ephox/bedrock');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
-  grunt.registerTask("default", ["clean:scratch", "subgrunt", "copy", "build-headers", "validateVersion", "clean:release", "moxiezip", "nugetpack", "version"]);
+  grunt.registerTask("default", ["clean:scratch", "subgrunt", "copy", "build-headers", "validateVersion", "clean:release", "moxiezip", "nugetpack", "version", "copy:to_project"]);
+
+  grunt.registerTask('copy-to-project', ["copy:to_project"]);
 };
