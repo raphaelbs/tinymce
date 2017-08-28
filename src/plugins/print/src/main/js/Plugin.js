@@ -22,7 +22,22 @@ define(
   function (PluginManager) {
     PluginManager.add('print', function (editor) {
       editor.addCommand('mcePrint', function () {
-        editor.getWin().print();
+        var mywindow = window.open('', '', 'left=0,top=0,width=950,height=600,toolbar=0,scrollbars=0,status=0,addressbar=0'), isChrome = Boolean(mywindow.chrome);
+        mywindow.document.write(editor.getWin().document.documentElement.innerHTML);
+        mywindow.document.close(); // necessary for IE >= 10 and necessary before onload for chrome
+
+        if (isChrome) {
+          mywindow.onload = function () { // wait until all resources loaded
+            mywindow.focus(); // necessary for IE >= 10
+            mywindow.print(); // change window to mywindow
+            mywindow.close();// change window to mywindow
+          };
+        } else {
+          mywindow.document.close(); // necessary for IE >= 10
+          mywindow.focus(); // necessary for IE >= 10
+          mywindow.print();
+          mywindow.close();
+        }
       });
 
       editor.addButton('print', {

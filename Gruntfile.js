@@ -638,7 +638,8 @@ module.exports = function (grunt) {
 
       "to_project": {
         files: [
-          {src: ['js/tinymce/tinymce.js', 'js/tinymce/tinymce.min.js'], dest: 'C:/inetpub/wwwroot/appsLifesys/LifesysClinica/2-Execução/appManutencao/lib/js/tinymce/', flatten: true, expand: true}
+          {src: ['js/tinymce/tinymce.js', 'js/tinymce/tinymce.min.js'], dest: 'C:/inetpub/wwwroot/appsLifesys/LifesysClinica/2-Execução/appManutencao/lib/js/tinymce/', flatten: true, expand: true},
+          {src: ['js/tinymce/plugins/print/plugin.js', 'js/tinymce/plugins/print/plugin.min.js'], dest: 'C:/inetpub/wwwroot/appsLifesys/LifesysClinica/2-Execução/appManutencao/lib/js/tinymce/plugins/print/', flatten: true, expand: true}
         ]
       }
     }
