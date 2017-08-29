@@ -52,9 +52,11 @@ define(
 
       // Add initial undo level when the editor is initialized
       // CHANGED:
-      /*editor.on('init', function () {
-        self.add();
-      });*/
+      if (!editor.settings.paginate_configs) {
+        editor.on('init', function () {
+          self.add();
+        });
+      }
 
       // Get position before an execCommand is processed
       editor.on('BeforeExecCommand', function (e) {
@@ -92,7 +94,10 @@ define(
         }
 
         if ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode === 45 || e.ctrlKey) {
-          addNonTypingUndoLevel();
+          //CHANGED: removing undo add level
+          if (!editor.settings.paginate_configs) {
+            addNonTypingUndoLevel();
+          }
           editor.nodeChanged();
         }
 
@@ -125,7 +130,10 @@ define(
         // Is character position keys left,right,up,down,home,end,pgdown,pgup,enter
         if ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode === 45) {
           if (self.typing) {
-            addNonTypingUndoLevel(e);
+            //CHANGED: removing undo add level
+            if (!editor.settings.paginate_configs) {
+              addNonTypingUndoLevel(e);
+            }
           }
 
           return;
@@ -136,7 +144,10 @@ define(
         if ((keyCode < 16 || keyCode > 20) && keyCode !== 224 && keyCode !== 91 && !self.typing && !modKey) {
           self.beforeChange();
           setTyping(true);
-          self.add({}, e);
+          //CHANGED: removing undo add level
+          if (!editor.settings.paginate_configs) {
+            self.add({}, e);
+          }
           isFirstTypedCharacter = true;
         }
       });
@@ -191,7 +202,7 @@ define(
          * @return {Object} Undo level that got added or null it a level wasn't needed.
          */
         add: function (level, event) {
-          var i, settings = editor.settings, lastLevel, currentLevel;
+          var settings = editor.settings, lastLevel, currentLevel;
 
           currentLevel = Levels.createFromEditor(editor);
           level = level || {};
@@ -213,8 +224,15 @@ define(
            * 24/08/2017
            * Raphael Brandão
            */
-          if (lastLevel && Levels.isEqWithoutHeadersAndFooters(lastLevel, level)) {
-            return null;
+          //CHANGED: removing undo add level
+          if (!editor.settings.paginate_configs) {
+            if (lastLevel && Levels.isEq(lastLevel, level)) {
+              return null;
+            }
+          } else {
+            if (lastLevel && Levels.isEqWithoutHeadersAndFooters(lastLevel, level)) {
+              return null;
+            }
           }
 
           // Set before bookmark on previous level
@@ -225,11 +243,7 @@ define(
           // Time to compress
           if (settings.custom_undo_redo_levels) {
             if (data.length > settings.custom_undo_redo_levels) {
-              for (i = 0; i < data.length - 1; i++) {
-                data[i] = data[i + 1];
-              }
-
-              data.length--;
+              data.shift();
               index = data.length;
             }
           }

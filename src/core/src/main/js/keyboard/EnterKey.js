@@ -623,7 +623,10 @@ define(
 
         if (editor.undoManager.typing) {
           editor.undoManager.typing = false;
-          editor.undoManager.add();
+          // CHANGED: block on enter key add undo level
+          if (!editor.settings.paginate_configs) {
+            editor.undoManager.add();
+          }
         }
 
         // Handle enter in list item
@@ -710,7 +713,10 @@ define(
         editor.fire('NewBlock', { newBlock: newBlock });
 
         undoManager.typing = false;
-        undoManager.add();
+        // CHANGED: block on enter key add undo level
+        if (!editor.settings.paginate_configs) {
+          undoManager.add();
+        }
       }
 
       editor.on('keydown', function (evt) {
