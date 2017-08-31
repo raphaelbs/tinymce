@@ -22,21 +22,20 @@ define(
   function (PluginManager) {
     PluginManager.add('print', function (editor) {
       editor.addCommand('mcePrint', function () {
-        var mywindow = window.open('', '', 'left=0,top=0,width=950,height=600,toolbar=0,scrollbars=0,status=0,addressbar=0'), isChrome = Boolean(mywindow.chrome);
-        mywindow.document.write(editor.getWin().document.documentElement.innerHTML);
-        mywindow.document.close(); // necessary for IE >= 10 and necessary before onload for chrome
-
-        if (isChrome) {
-          mywindow.onload = function () { // wait until all resources loaded
-            mywindow.focus(); // necessary for IE >= 10
-            mywindow.print(); // change window to mywindow
-            mywindow.close();// change window to mywindow
-          };
-        } else {
-          mywindow.document.close(); // necessary for IE >= 10
+        if (window.chrome) {
+          // if chrome, opens print preview
+          editor.getWin().print();
+        } else if (/MSIE 9/i.test(navigator.userAgent) || /rv:11.0/i.test(navigator.userAgent) || /MSIE 10/i.test(navigator.userAgent)) {
+          // if IE 9, 10 or 11, open new window and print
+          var mywindow = window.open('', '', 'left=0,top=0,width=950,height=600,toolbar=0,scrollbars=0,status=0,addressbar=0');
+          mywindow.document.write(editor.getWin().document.documentElement.innerHTML);
+          mywindow.document.close(); // necessary for IE >= 10 and necessary before onload for chrome
           mywindow.focus(); // necessary for IE >= 10
-          mywindow.print();
-          mywindow.close();
+          mywindow.print(); // change window to mywindow
+          mywindow.close();// change window to mywindow
+        } else {
+          // if other browser, fire an event for custom handling
+          editor.fire('mcePrintNotChrome', { value: editor.getWin().document.documentElement.innerHTML }); // CHANGED: added
         }
       });
 
