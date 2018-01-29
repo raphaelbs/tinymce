@@ -25,7 +25,7 @@ define(
         var mywindow;
         if (window.chrome) {
           // if chrome, opens print preview
-          mywindow = window.open('', '', 'left=0,top=0,width=950,height=600,toolbar=0,scrollbars=0,status=0,addressbar=0');
+          mywindow = window.open('', '_blank');
           mywindow.document.write(editor.getWin().document.documentElement.innerHTML);
           mywindow.document.close(); // necessary for IE >= 10 and necessary before onload for chrome
           mywindow.onload = function () {
@@ -35,7 +35,7 @@ define(
           };
         } else if (/MSIE 9/i.test(navigator.userAgent) || /rv:11.0/i.test(navigator.userAgent) || /MSIE 10/i.test(navigator.userAgent)) {
           // if IE 9, 10 or 11, open new window and print
-          mywindow = window.open('', '', 'left=0,top=0,width=950,height=600,toolbar=0,scrollbars=0,status=0,addressbar=0');
+          mywindow = window.open('', '_blank');
           mywindow.document.write(editor.getWin().document.documentElement.innerHTML);
           mywindow.document.close(); // necessary for IE >= 10 and necessary before onload for chrome
           mywindow.focus(); // necessary for IE >= 10

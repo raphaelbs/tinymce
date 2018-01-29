@@ -68,7 +68,8 @@ define(
         var editorContainer, iframe, iframeStyle;
 
         function resize() {
-          DOM.setStyle(iframe, 'height', getWindowSize().h - (editorContainer.clientHeight - iframe.clientHeight));
+          var offset = editor.settings.fullscreen_height_offset() || 0;
+          DOM.setStyle(iframe, 'height', getWindowSize().h - (editorContainer.clientHeight - iframe.clientHeight) - offset);
         }
 
         fullscreenState = !fullscreenState;

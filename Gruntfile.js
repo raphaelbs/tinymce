@@ -638,8 +638,7 @@ module.exports = function (grunt) {
 
       "to_project": {
         files: [
-          {src: ['js/tinymce/tinymce.js', 'js/tinymce/tinymce.min.js'], dest: 'C:/inetpub/wwwroot/appsLifesys/LifesysClinica/2-Execução/appManutencao/lib/js/tinymce/', flatten: true, expand: true},
-          {src: ['js/tinymce/plugins/print/plugin.js', 'js/tinymce/plugins/print/plugin.min.js'], dest: 'C:/inetpub/wwwroot/appsLifesys/LifesysClinica/2-Execução/appManutencao/lib/js/tinymce/plugins/print/', flatten: true, expand: true}
+          { src: '**', cwd: 'js/tinymce/', dest: '../../app/lib/js/tinymce/', expand: true }
         ]
       }
     }
@@ -663,5 +662,6 @@ module.exports = function (grunt) {
 
   grunt.registerTask("default", ["clean:scratch", "subgrunt", "copy", "build-headers", "validateVersion", "clean:release", "moxiezip", "nugetpack", "version", "copy:to_project"]);
 
-  grunt.registerTask('copy-to-project', ["copy:to_project"]);
+  /* Builda e publica tinymce completo para o projeto do meu consultório */
+  grunt.registerTask('ctp', ["default", "copy:to_project"]);
 };

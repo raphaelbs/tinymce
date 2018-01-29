@@ -67,7 +67,16 @@ define(
       editor.selection.moveToBookmark(before ? level.beforeBookmark : level.bookmark);
     };
 
+    /**
+     * CHANGED:
+     * Adicionado tratativa de exceção para quando o {level} for vazio
+     * 13/12/2017
+     * Raphael Brandão
+     */
     var getLevelContent = function (level) {
+      if (level == undefined) {
+        return undefined;
+      }
       return level.type === 'fragmented' ? level.fragments.join('') : level.content;
     };
 
